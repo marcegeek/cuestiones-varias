@@ -53,7 +53,7 @@ obs-dtext       =   obs-NO-WS-CTL / quoted-pair
 obs-domain      =   atom *("." atom)
 
 FWS             =   ([*WSP] 1*WSP) / obs-FWS ; Folding white space, but unfolded (without any CRLF before a WSP)
-obs-FWS         =   1*(WSP)     ; Corregido según errata 1908, but unfolded (without any CRLF before a WSP)
+obs-FWS         =   1*WSP     ; Corregido según errata 1908, but unfolded (without any CRLF before a WSP)
 
 
 Algunos tokens primitivos según RFC 5234 (ABNF) (sólo los menos triviales):
@@ -63,7 +63,7 @@ WSP            =  SP / HTAB  ; white space
 
 
 Finalmente, la expansión definitiva:
-addr-spec = (1*atext *("." 1*atext)) / (DQUOTE *([([*WSP] 1*WSP) / 1*(WSP)] (qtext / obs-NO-WS-CTL) / (("\" (VCHAR / WSP)) / ("\" (%d0 / obs-NO-WS-CTL / LF / CR)))) [([*WSP] 1*WSP) / 1*(WSP)] DQUOTE) /
-((1*atext / (DQUOTE *([([*WSP] 1*WSP) / 1*(WSP)] (qtext / obs-NO-WS-CTL) / (("\" (VCHAR / WSP)) / ("\" (%d0 / obs-NO-WS-CTL / LF / CR)))) [([*WSP] 1*WSP) / 1*(WSP)] DQUOTE)) *("." (1*atext /
-(DQUOTE *([([*WSP] 1*WSP) / 1*(WSP)] (qtext / obs-NO-WS-CTL) / (("\" (VCHAR / WSP)) / ("\" (%d0 / obs-NO-WS-CTL / LF / CR)))) [([*WSP] 1*WSP) / 1*(WSP)] DQUOTE)))) "@"
-(1*atext *("." 1*atext)) / ("[" *([([*WSP] 1*WSP) / 1*(WSP)] dtext) [([*WSP] 1*WSP) / 1*(WSP)] "]")
+addr-spec = (1*atext *("." 1*atext)) / (DQUOTE *([([*WSP] 1*WSP) / 1*WSP] (qtext / obs-NO-WS-CTL) / (("\" (VCHAR / WSP)) / ("\" (%d0 / obs-NO-WS-CTL / LF / CR)))) [([*WSP] 1*WSP) / 1*WSP] DQUOTE) /
+((1*atext / (DQUOTE *([([*WSP] 1*WSP) / 1*WSP] (qtext / obs-NO-WS-CTL) / (("\" (VCHAR / WSP)) / ("\" (%d0 / obs-NO-WS-CTL / LF / CR)))) [([*WSP] 1*WSP) / 1*WSP] DQUOTE)) *("." (1*atext /
+(DQUOTE *([([*WSP] 1*WSP) / 1*WSP] (qtext / obs-NO-WS-CTL) / (("\" (VCHAR / WSP)) / ("\" (%d0 / obs-NO-WS-CTL / LF / CR)))) [([*WSP] 1*WSP) / 1*WSP] DQUOTE)))) "@"
+(1*atext *("." 1*atext)) / ("[" *([([*WSP] 1*WSP) / 1*WSP] dtext) [([*WSP] 1*WSP) / 1*WSP] "]")
