@@ -1,0 +1,68 @@
+Especificación de las direcciones de e-mail según el formato de mensajes de internet (RFC 5322),
+sin incluir el "folding" de los encabezamientos, el cual puede formar parte de los mensajes pero
+no forma parte de las direcciones, o sea que éstas se consideran "unfolded" (o sea, libres de
+cualquier CRLF que esté inmediatamente seguido por un espacio en blanco).
+Además no se incluyen los CFWS (comentario o espacio en blanco con folding) opcionales que rodean
+a otros caracteres ya que no forman parte de las direcciones.
+
+Las definiciones sintácticas se desarrollan según la notación ABNF (RFC 5234)
+
+addr-spec       =   local-part "@" domain
+local-part      =   dot-atom / quoted-string / obs-local-part
+
+dot-atom        =   dot-atom-text      ; dot-atom, but without [CFWS]
+dot-atom-text   =   1*atext *("." 1*atext)
+atext           =   ALPHA / DIGIT /    ; Printable US-ASCII
+                    "!" / "#" /        ;  characters not including
+                    "$" / "%" /        ;  specials.  Used for atoms.
+                    "&" / "'" /
+                    "*" / "+" /
+                    "-" / "/" /
+                    "=" / "?" /
+                    "^" / "_" /
+                    "`" / "{" /
+                    "|" / "}" /
+                    "~"
+
+quoted-string   =   DQUOTE *([FWS] qcontent) [FWS] DQUOTE
+qcontent        =   qtext / quoted-pair
+qtext           =   %d33 /             ; Printable US-ASCII
+                    %d35-91 /          ;  characters not including
+                    %d93-126 /         ;  "\" or the quote character
+                    obs-qtext
+quoted-pair     =   ("\" (VCHAR / WSP)) / obs-qp
+obs-qtext       =   obs-NO-WS-CTL
+obs-NO-WS-CTL   =   %d1-8 /            ; US-ASCII control
+                    %d11 /             ;  characters that do not
+                    %d12 /             ;  include the carriage
+                    %d14-31 /          ;  return, line feed, and
+                    %d127              ;  white space characters
+obs-qp          =   "\" (%d0 / obs-NO-WS-CTL / LF / CR)
+
+obs-local-part  =   word *("." word)
+word            =   atom / quoted-string
+atom            =   1*atext
+
+
+domain          =   dot-atom / domain-literal / obs-domain
+domain-literal  =   "[" *([FWS] dtext) [FWS] "]"
+dtext           =   %d33-90 /          ; Printable US-ASCII
+                    %d94-126 /         ;  characters not including
+                    obs-dtext          ;  "[", "]", or "\"
+obs-dtext       =   obs-NO-WS-CTL / quoted-pair
+obs-domain      =   atom *("." atom)
+
+FWS             =   ([*WSP] 1*WSP) / obs-FWS ; Folding white space, but unfolded (without any CRLF before a WSP)
+obs-FWS         =   1*(WSP)     ; Corregido según errata 1908, but unfolded (without any CRLF before a WSP)
+
+
+Algunos tokens primitivos según RFC 5234 (ABNF) (sólo los menos triviales):
+VCHAR          =  %x21-7E    ; visible (printing) characters
+WSP            =  SP / HTAB  ; white space
+
+
+
+Finalmente, la expansión definitiva:
+addr-spec = (1*atext *("." 1*atext)) / (DQUOTE *([([*WSP] 1*WSP) / 1*(WSP)] (qtext / obs-NO-WS-CTL) / (("\" (VCHAR / WSP)) / ("\" (%d0 / obs-NO-WS-CTL / LF / CR)))) [([*WSP] 1*WSP) / 1*(WSP)] DQUOTE) /
+((1*atext / quoted-string) *("." (1*atext / (DQUOTE *([([*WSP] 1*WSP) / 1*(WSP)] (qtext / obs-NO-WS-CTL) / (("\" (VCHAR / WSP)) / ("\" (%d0 / obs-NO-WS-CTL / LF / CR)))) [([*WSP] 1*WSP) / 1*(WSP)] DQUOTE)))) "@"
+(1*atext *("." 1*atext)) / ("[" *([FWS] dtext) [FWS] "]") / obs-domain
