@@ -64,5 +64,6 @@ WSP            =  SP / HTAB  ; white space
 
 Finalmente, la expansión definitiva:
 addr-spec = (1*atext *("." 1*atext)) / (DQUOTE *([([*WSP] 1*WSP) / 1*(WSP)] (qtext / obs-NO-WS-CTL) / (("\" (VCHAR / WSP)) / ("\" (%d0 / obs-NO-WS-CTL / LF / CR)))) [([*WSP] 1*WSP) / 1*(WSP)] DQUOTE) /
-((1*atext / quoted-string) *("." (1*atext / (DQUOTE *([([*WSP] 1*WSP) / 1*(WSP)] (qtext / obs-NO-WS-CTL) / (("\" (VCHAR / WSP)) / ("\" (%d0 / obs-NO-WS-CTL / LF / CR)))) [([*WSP] 1*WSP) / 1*(WSP)] DQUOTE)))) "@"
-(1*atext *("." 1*atext)) / ("[" *([FWS] dtext) [FWS] "]") / obs-domain
+((1*atext / (DQUOTE *([([*WSP] 1*WSP) / 1*(WSP)] (qtext / obs-NO-WS-CTL) / (("\" (VCHAR / WSP)) / ("\" (%d0 / obs-NO-WS-CTL / LF / CR)))) [([*WSP] 1*WSP) / 1*(WSP)] DQUOTE)) *("." (1*atext /
+(DQUOTE *([([*WSP] 1*WSP) / 1*(WSP)] (qtext / obs-NO-WS-CTL) / (("\" (VCHAR / WSP)) / ("\" (%d0 / obs-NO-WS-CTL / LF / CR)))) [([*WSP] 1*WSP) / 1*(WSP)] DQUOTE)))) "@"
+(1*atext *("." 1*atext)) / ("[" *([([*WSP] 1*WSP) / 1*(WSP)] dtext) [([*WSP] 1*WSP) / 1*(WSP)] "]")
