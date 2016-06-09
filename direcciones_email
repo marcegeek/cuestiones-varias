@@ -1,0 +1,65 @@
+Especificación de las direcciones de e-mail según el formato de mensajes de internet (RFC 5322)
+Las definiciones sintácticas se desarrollan según la notación ABNF (RFC 5234)
+
+addr-spec       =   local-part "@" domain
+local-part      =   dot-atom / quoted-string / obs-local-part
+
+dot-atom        =   [CFWS] dot-atom-text [CFWS]
+dot-atom-text   =   1*atext *("." 1*atext)
+atext           =   ALPHA / DIGIT /    ; Printable US-ASCII
+                    "!" / "#" /        ;  characters not including
+                    "$" / "%" /        ;  specials.  Used for atoms.
+                    "&" / "'" /
+                    "*" / "+" /
+                    "-" / "/" /
+                    "=" / "?" /
+                    "^" / "_" /
+                    "`" / "{" /
+                    "|" / "}" /
+                    "~"
+
+quoted-string   =   [CFWS]
+                    DQUOTE *([FWS] qcontent) [FWS] DQUOTE
+                    [CFWS]
+qcontent        =   qtext / quoted-pair
+qtext           =   %d33 /             ; Printable US-ASCII
+                    %d35-91 /          ;  characters not including
+                    %d93-126 /         ;  "\" or the quote character
+                    obs-qtext
+quoted-pair     =   ("\" (VCHAR / WSP)) / obs-qp
+obs-qtext       =   obs-NO-WS-CTL
+obs-NO-WS-CTL   =   %d1-8 /            ; US-ASCII control
+                    %d11 /             ;  characters that do not
+                    %d12 /             ;  include the carriage
+                    %d14-31 /          ;  return, line feed, and
+                    %d127              ;  white space characters
+obs-qp          =   "\" (%d0 / obs-NO-WS-CTL / LF / CR)
+
+obs-local-part  =   word *("." word)
+word            =   atom / quoted-string
+atom            =   [CFWS] 1*atext [CFWS]
+
+
+domain          =   dot-atom / domain-literal / obs-domain
+domain-literal  =   [CFWS] "[" *([FWS] dtext) [FWS] "]" [CFWS]
+dtext           =   %d33-90 /          ; Printable US-ASCII
+                    %d94-126 /         ;  characters not including
+                    obs-dtext          ;  "[", "]", or "\"
+obs-dtext       =   obs-NO-WS-CTL / quoted-pair
+obs-domain      =   atom *("." atom)
+
+FWS             =   ([*WSP CRLF] 1*WSP) / obs-FWS ; Folding white space
+obs-FWS         =   1*([CRLF] WSP)     ; Corregido según errata 1908
+CFWS            =   (1*([FWS] comment) [FWS]) / FWS
+comment         =   "(" *([FWS] ccontent) [FWS] ")"
+ccontent        =   ctext / quoted-pair / comment
+ctext           =   %d33-39 /          ; Printable US-ASCII
+                    %d42-91 /          ;  characters not including
+                    %d93-126 /         ;  "(", ")", or "\"
+                    obs-ctext
+obs-ctext       =   obs-NO-WS-CTL
+
+
+Algunos tokens primitivos según RFC 5234 (ABNF) (sólo los no tan triviales):
+VCHAR          =  %x21-7E    ; visible (printing) characters
+WSP            =  SP / HTAB  ; white space
